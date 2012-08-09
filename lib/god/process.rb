@@ -34,9 +34,9 @@ module God
           gid_num = Etc.getgrnam(self.gid).gid if self.gid
 
           ::Dir.chroot(self.chroot) if self.chroot
-          ::Process.groups = [gid_num] if self.gid
-          ::Process::Sys.setgid(gid_num) if self.gid
-          ::Process::Sys.setuid(uid_num) if self.uid
+          ::Process.groups = [gid_num] if gid_num && gid_num != ::Process::Sys.getgid
+          ::Process::Sys.setgid(gid_num) if gid_num && gid_num != ::Process::Sys.getgid
+          ::Process::Sys.setuid(uid_num) if uid_num && uid_num != ::Process::Sys.getuid
         rescue ArgumentError, Errno::EPERM, Errno::ENOENT
           exit(1)
         end
